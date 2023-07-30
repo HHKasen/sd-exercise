@@ -1,5 +1,10 @@
-user_diskio.c:79:9:USER_initialize	1
-user_diskio.c:94:9:USER_status	1
-user_diskio.c:112:9:USER_read	1
-user_diskio.c:133:9:USER_write	1
-user_diskio.c:155:9:USER_ioctl	1
+user_diskio.c:79:6:GenerateCRCTable	5
+user_diskio.c:96:9:CRCAdd	1
+user_diskio.c:102:9:getCRC	2
+user_diskio.c:116:9:send_SD_cmd	12
+user_diskio.c:180:6:get_trail	2
+user_diskio.c:234:9:USER_initialize	10
+user_diskio.c:341:9:USER_status	1
+user_diskio.c:360:9:USER_read	17
+user_diskio.c:464:9:USER_write	18
+user_diskio.c:580:9:USER_ioctl	1

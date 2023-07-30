@@ -24,6 +24,8 @@
 /-----------------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f4xx_hal.h"
+extern SPI_HandleTypeDef hspi2; //inited spi handle
+#define HSPI (hspi2)
 
 /*-----------------------------------------------------------------------------/
 / Function Configurations
