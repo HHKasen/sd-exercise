@@ -121,7 +121,7 @@ int main(void)
 //	  buff2[ii] = ii&0xFF;
 	  buff2[ii] = 0xAA;
   }
-  status = USER_write(0,buff2,0,3);
+  status = USER_write(0,buff2,0,1);
 
   printf("write status: %u\r\n",status);
 
@@ -154,6 +154,18 @@ int main(void)
   //for(int ii=0; ii<512; ii++){
 //	  printf("(%i,%i)\r\n",ii,buff[ii]);
 //  }
+  int cbuff = 0;
+  status = USER_ioctl(0,CTRL_SYNC,NULL);
+  printf("status:%u \r\n",status);
+  //USER_ioctl(0,GET_SECTOR_COUNT,NULL);
+  status = USER_ioctl(0,GET_BLOCK_SIZE, &cbuff);
+  printf("status:%u \r\n",status);
+  printf("\tbuffer:%u \r\n",cbuff);
+
+  //USER_ioctl(0,GET_BLOCK_SIZE,NULL);
+  //U/SER_ioctl(0,CTRL_TRIM,NULL);
+
+
 
   /* USER CODE END 2 */
 

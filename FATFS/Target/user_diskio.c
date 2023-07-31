@@ -163,7 +163,7 @@ uint8_t send_SD_cmd(SD_cmd_t cmd, uint32_t cmd_arg){
 	}
 
 
-	if(cmd!=CMD58 && cmd!=CMD8 && spi_rx!=0xFF){
+	if(cmd!=CMD58 && cmd!=CMD8 && cmd!=CMD9 && spi_rx!=0xFF){
 		uint8_t spi_rx_clear = 0x0;
 
 		for(int ii=0; ii<8; ii++){
@@ -194,6 +194,8 @@ void get_trail(uint8_t* ocr){
 			HAL_SPI_TransmitReceive(&HSPI, &tx_high, &spi_rx_clear , 1, 50);
 		}
 }
+
+
 
 
 /* USER CODE END DECL */
@@ -521,7 +523,7 @@ DRESULT USER_write (
 	  return RES_OK;
 	}
 	else{
-		uint8_t R1_resp = send_SD_cmd(CMD25,address);
+		uint8_t R1_resp = send_SD_cmd(CMD25,sector);
 
 		uint8_t spi_tx = 0xFF;
 		uint8_t spi_rx = 0xFF;
@@ -530,7 +532,7 @@ DRESULT USER_write (
 		HAL_SPI_TransmitReceive(&HSPI, &spi_tx, &spi_rx, 1, 50);
 
 
-		for(int jj=0; jj<N_blocks; jj++){
+		for(int jj=0; jj<count; jj++){
 
 
 			//send data packet
@@ -541,7 +543,7 @@ DRESULT USER_write (
 			//spi_tx = 0xAC;
 			for(int ii=0;ii<512;ii++){
 	//			HAL_SPI_TransmitReceive(&HSPI, &spi_tx, &spi_rx, 1, 50);
-				HAL_SPI_TransmitReceive(&HSPI, buffer+ii+(512*jj), &spi_rx, 1, 50);
+				HAL_SPI_TransmitReceive(&HSPI, buff+ii+(512*jj), &spi_rx, 1, 50);
 			}
 
 			spi_tx = 0x00;
@@ -553,7 +555,6 @@ DRESULT USER_write (
 			//get data response, fail if not data accepted
 			spi_tx = 0xFF;
 			HAL_SPI_TransmitReceive(&HSPI, &spi_tx, &spi_rx, 1, 50);
-			printf("\tWrite response (status):%u\r\n", (spi_rx >> 1) & 0x7 );
 
 			int busy = 1;
 			int counter = 0;
@@ -613,7 +614,81 @@ DRESULT USER_ioctl (
 {
   /* USER CODE BEGIN IOCTL */
     DRESULT res = RES_ERROR;
-    return res;
+	switch(cmd){
+
+	case CTRL_SYNC:
+		// nothing to do here
+		res = RES_OK;
+		break;
+	case GET_BLOCK_SIZE:
+		*(int*)buff = 512; //buffer size is always 512
+		res = RES_OK;
+		break;
+	case GET_SECTOR_SIZE:
+		*(int*)buff = 512; //buffer size is always 512
+		res = RES_OK;
+		break;
+
+	case GET_SECTOR_COUNT:
+		if(USER_status(pdrv)!=0){
+			return RES_ERROR;
+		}
+		else{
+			BYTE buffer[16] = {0};
+			//printf("GET_BLOCK_SIZE\r\n");
+			uint8_t R1_resp = send_SD_cmd(CMD9,0x0);
+			//printf("cmd resp:%u\r\n",R1_resp);
+			uint8_t spi_tx = 0xFF;
+			uint8_t spi_rx = 0xFF;
+
+			int ii = 0;
+			while( (spi_rx == 0xFF)&&(ii<10000) ){
+				ii++;
+				HAL_SPI_TransmitReceive(&HSPI, &spi_tx, &spi_rx , 1, 50);
+			}
+
+			//printf("ii:%u\r\n",ii);
+			//printf("data token:%u\r\n",spi_rx);
+
+			//capture data
+			for(ii=0;ii<16;ii++){
+				HAL_SPI_TransmitReceive(&HSPI, &spi_tx, buffer+15-ii , 1, 50);
+				//printf("(%u,%u)\r\n",8*(15-ii),buffer[ii]);
+				printf("(%u,%u)\r\n",8*(15-ii),buffer[15-ii]);
+
+			}
+
+
+			for(ii=0;ii<2;ii++){
+				HAL_SPI_TransmitReceive(&HSPI, &spi_tx, &spi_rx  , 1, 50);
+				printf("rx crc:%u\r\n",spi_rx);
+			}
+
+			//printf( "sector size: %u\r\n", ((buffer[5]&0x3F)<<1)|(buffer[4]>>7) );//  | buffer[4]>>7) );
+			uint32_t mem_size = 0;
+			mem_size = (uint32_t)buffer[6] | ( ((uint32_t) buffer[7])<<8) | (((uint32_t)(buffer[8]&0x3F))<<16) ;
+//			printf("48:%u\r\n",buffer[6]);
+//			printf("56:%u\r\n",buffer[7]);
+//			printf("64:%u\r\n",buffer[8]);
+
+
+//			printf("mem size(kB):%u\r\n",(mem_size+1)*512);
+//			printf("mem size(sectors):%u\r\n",(mem_size+1)*1000);
+		  *(int*)buff = ((mem_size+1)*1000);
+	      res =  RES_OK;
+
+		}
+
+		break;
+	case CTRL_TRIM:
+		printf("CTRL_TRIM\r\n");
+		break;
+	default:
+		res = RES_PARERR;
+	}
+	return res;
+
+
   /* USER CODE END IOCTL */
 }
 #endif /* _USE_IOCTL == 1 */
