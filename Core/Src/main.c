@@ -162,6 +162,20 @@ int main(void)
   printf("status:%u \r\n",status);
   printf("\tbuffer:%u \r\n",cbuff);
 
+
+  status = USER_ioctl(0,GET_SECTOR_SIZE, &cbuff);
+  printf("status:%u \r\n",status);
+  printf("\tbuffer:%u \r\n",cbuff);
+
+  status = USER_ioctl(0,GET_SECTOR_COUNT, &cbuff);
+  printf("status:%u \r\n",status);
+  printf("\tbuffer:%u \r\n",cbuff);
+
+  status = USER_ioctl(0,CTRL_TRIM, NULL);
+  printf("status:%u \r\n",status);
+
+
+
   //USER_ioctl(0,GET_BLOCK_SIZE,NULL);
   //U/SER_ioctl(0,CTRL_TRIM,NULL);
 

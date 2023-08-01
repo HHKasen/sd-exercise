@@ -621,7 +621,7 @@ DRESULT USER_ioctl (
 		res = RES_OK;
 		break;
 	case GET_BLOCK_SIZE:
-		*(int*)buff = 512; //buffer size is always 512
+		*(int*)buff = 1; //could check, but doing this for now
 		res = RES_OK;
 		break;
 	case GET_SECTOR_SIZE:
@@ -654,14 +654,14 @@ DRESULT USER_ioctl (
 			for(ii=0;ii<16;ii++){
 				HAL_SPI_TransmitReceive(&HSPI, &spi_tx, buffer+15-ii , 1, 50);
 				//printf("(%u,%u)\r\n",8*(15-ii),buffer[ii]);
-				printf("(%u,%u)\r\n",8*(15-ii),buffer[15-ii]);
+				//printf("(%u,%u)\r\n",8*(15-ii),buffer[15-ii]);
 
 			}
 
 
 			for(ii=0;ii<2;ii++){
 				HAL_SPI_TransmitReceive(&HSPI, &spi_tx, &spi_rx  , 1, 50);
-				printf("rx crc:%u\r\n",spi_rx);
+				//printf("rx crc:%u\r\n",spi_rx);
 			}
 
 			//printf( "sector size: %u\r\n", ((buffer[5]&0x3F)<<1)|(buffer[4]>>7) );//  | buffer[4]>>7) );
@@ -681,7 +681,10 @@ DRESULT USER_ioctl (
 
 		break;
 	case CTRL_TRIM:
-		printf("CTRL_TRIM\r\n");
+//		printf("CTRL_TRIM\r\n");
+		//not implementing
+	    res =  RES_OK;
+
 		break;
 	default:
 		res = RES_PARERR;
