@@ -330,6 +330,7 @@ DSTATUS USER_initialize (
   	  //printf("error, CMD0 response:%u\r\n",R1_resp);
     }
 
+    Stat = 0;
 
     return Stat;
   /* USER CODE END INIT */

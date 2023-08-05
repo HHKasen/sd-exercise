@@ -104,80 +104,83 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   MX_SPI2_Init();
-//  MX_FATFS_Init();
+  MX_FATFS_Init();
   /* USER CODE BEGIN 2 */
+  FATFS fs;           /* Filesystem object */
+  FIL fil;            /* File object */
+  FRESULT res;        /* API result code */
+  UINT bw;            /* Bytes written */
+  BYTE work[1024]; /* Work area (larger is better for processing time) */
+  ///how big should work be?
 
-  printf("\r\n-------------\r\n-------------\r\n  Starting...\r\n-------------\r\n-------------\r\n\r\n\r\n");
-//  sd_init();
+//  FRESULT f_mkfs (const TCHAR* path, BYTE opt, DWORD au, void* work, UINT len);	/* Create a FAT volume */
 
 
-  uint8_t buff[1024] = {0};
-  uint8_t buff2[1024] = {0};
-  DSTATUS status = USER_initialize(0);
-  printf("init status: %u\r\n",status);
+  /* Format the default drive with default parameters */
+  printf("about to make fs...\r\n");
+  res = f_mkfs("0",FM_ANY,0, work, sizeof work);
+  printf("mkfs res:%u\r\n",res);
+
+  /* Register work area */
+  res = f_mount(&fs, "", 0);
+  printf("mnt res:%u\r\n",res);
+
+  /* Create a file as new */
+  res = f_open(&fil, "hello.txt", FA_CREATE_NEW | FA_WRITE);
+  printf("open res:%u\r\n",res);
+
+  /* Write a message */
+  res = f_write(&fil, "Hello, World!\r\n", 15, &bw);
+  printf("write res:%u\r\n",res);
+
+  /* Close the file */
+  f_close(&fil);
+
+  FRESULT fr;
+  FILINFO fno;
+  const char *fname = "hello.txt";
 
 
-  for(int ii=0; ii<1024; ii++){
-//	  buff2[ii] = ii&0xFF;
-	  buff2[ii] = 0xAA;
+  printf("Test for \"%s\"...\r\n", fname);
+
+  fr = f_stat(fname, &fno);
+  switch (fr) {
+
+  case FR_OK:
+      printf("Size: %lu\r\n", fno.fsize);
+      printf("Timestamp: %u-%02u-%02u, %02u:%02u\r\n",
+             (fno.fdate >> 9) + 1980, fno.fdate >> 5 & 15, fno.fdate & 31,
+             fno.ftime >> 11, fno.ftime >> 5 & 63);
+      printf("Attributes: %c%c%c%c%c\r\n",
+             (fno.fattrib & AM_DIR) ? 'D' : '-',
+             (fno.fattrib & AM_RDO) ? 'R' : '-',
+             (fno.fattrib & AM_HID) ? 'H' : '-',
+             (fno.fattrib & AM_SYS) ? 'S' : '-',
+             (fno.fattrib & AM_ARC) ? 'A' : '-');
+      break;
+
+  case FR_NO_FILE:
+      printf("\"%s\" is not exist.\r\n", fname);
+      break;
+
+  default:
+      printf("An error occured. (%d)\n", fr);
   }
-  status = USER_write(0,buff2,0,1);
-
-  printf("write status: %u\r\n",status);
-
-  status = USER_read(0,buff,0,2);
-  printf("read status: %u\r\n",status);
-
-//  write_multiple_blocks(0x0,2,buff2);
-//  uint8_t buff2[512] = {0};
-
-//  for(int ii=0; ii<512; ii++){
-//	  buff2[ii] = ii&0xFF;
-//  }
-
-  //write_block(0x0,buff2);
-  //write_block(0x1,buff2);
-
-//  read_multiple_blocks(0x0,2,buff);
-
-//  read_block(0x0,buff);
-//  read_block(0x1,buff);
-
-  //Debug - print out block
-  for(int ii=0; ii<1024; ii++){
-	  printf("(%i,%i)\r\n",ii,buff[ii]);
-  }
-
-//  read_block(0x1,buff);
-
-  //Debug - print out block
-  //for(int ii=0; ii<512; ii++){
-//	  printf("(%i,%i)\r\n",ii,buff[ii]);
-//  }
-  int cbuff = 0;
-  status = USER_ioctl(0,CTRL_SYNC,NULL);
-  printf("status:%u \r\n",status);
-  //USER_ioctl(0,GET_SECTOR_COUNT,NULL);
-  status = USER_ioctl(0,GET_BLOCK_SIZE, &cbuff);
-  printf("status:%u \r\n",status);
-  printf("\tbuffer:%u \r\n",cbuff);
 
 
-  status = USER_ioctl(0,GET_SECTOR_SIZE, &cbuff);
-  printf("status:%u \r\n",status);
-  printf("\tbuffer:%u \r\n",cbuff);
-
-  status = USER_ioctl(0,GET_SECTOR_COUNT, &cbuff);
-  printf("status:%u \r\n",status);
-  printf("\tbuffer:%u \r\n",cbuff);
-
-  status = USER_ioctl(0,CTRL_TRIM, NULL);
-  printf("status:%u \r\n",status);
+  /* Unregister work area */
+  f_mount(0, "", 0);
 
 
 
-  //USER_ioctl(0,GET_BLOCK_SIZE,NULL);
-  //U/SER_ioctl(0,CTRL_TRIM,NULL);
+  //DSTATUS stat = disk_initialize(0);
+  //printf("init:%u\r\n",stat);
+
+  //DSTATUS stat = USER_initialize(0);
+  //printf("init:%u\r\n",stat);
+
+  //stat = USER_status(0);
+  //printf("init:%u\r\n",stat);
 
 
 

@@ -4,7 +4,7 @@
 ../FATFS/Target/user_diskio.c:116:9:send_SD_cmd	88	static
 ../FATFS/Target/user_diskio.c:180:6:get_trail	40	static
 ../FATFS/Target/user_diskio.c:236:9:USER_initialize	40	static
-../FATFS/Target/user_diskio.c:343:9:USER_status	16	static
-../FATFS/Target/user_diskio.c:362:9:USER_read	64	static
-../FATFS/Target/user_diskio.c:466:9:USER_write	88	static
-../FATFS/Target/user_diskio.c:609:9:USER_ioctl	64	static
+../FATFS/Target/user_diskio.c:344:9:USER_status	16	static
+../FATFS/Target/user_diskio.c:363:9:USER_read	64	static
+../FATFS/Target/user_diskio.c:467:9:USER_write	88	static
+../FATFS/Target/user_diskio.c:610:9:USER_ioctl	64	static
