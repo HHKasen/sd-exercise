@@ -201,8 +201,6 @@ void get_trail(uint8_t* ocr){
 /* USER CODE END DECL */
 
 /* Private function prototypes -----------------------------------------------*/
-
-
 DSTATUS USER_initialize (BYTE pdrv);
 DSTATUS USER_status (BYTE pdrv);
 DRESULT USER_read (BYTE pdrv, BYTE *buff, DWORD sector, UINT count);
@@ -367,7 +365,6 @@ DRESULT USER_read (
 	UINT count      /* Number of sectors to read */
 )
 {
-
   /* USER CODE BEGIN READ */
 
 	if(pdrv!=0){
