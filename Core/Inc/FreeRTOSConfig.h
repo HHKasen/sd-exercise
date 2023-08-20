@@ -154,6 +154,15 @@ header file. */
 #define configASSERT( x ) if ((x) == 0) {taskDISABLE_INTERRUPTS(); for( ;; );}
 /* USER CODE END 1 */
 
+  /* The size of the global output buffer that is available for use when there
+  are multiple command interpreters running at once (for example, one on a UART
+  and one on TCP/IP).  This is done to prevent an output buffer being defined by
+  each implementation - which would waste RAM.  In this case, there is only one
+  command interpreter running, and it has its own local output buffer, so the
+  global buffer is just set to be one byte long as it is not used and should not
+  take up unnecessary RAM. */
+#define configCOMMAND_INT_MAX_OUTPUT_SIZE 1
+
 /* Definitions that map the FreeRTOS port interrupt handlers to their CMSIS
 standard names. */
 #define vPortSVCHandler    SVC_Handler

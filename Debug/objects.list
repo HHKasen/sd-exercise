@@ -30,6 +30,7 @@
 "./Middlewares/FatFs/ff.o"
 "./Middlewares/FatFs/ff_gen_drv.o"
 "./Middlewares/FatFs/syscall.o"
+"./Middlewares/FreeRTOS/FreeRTOS_CLI.o"
 "./Middlewares/FreeRTOS/cmsis_os2.o"
 "./Middlewares/FreeRTOS/croutine.o"
 "./Middlewares/FreeRTOS/event_groups.o"

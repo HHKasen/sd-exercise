@@ -1,0 +1,6 @@
+/root/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Middlewares/Third_Party/FreeRTOS/Source/FreeRTOS_CLI.c:105:12:FreeRTOS_CLIRegisterCommand	32	static,ignoring_inline_asm
+/root/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Middlewares/Third_Party/FreeRTOS/Source/FreeRTOS_CLI.c:146:12:FreeRTOS_CLIProcessCommand	40	static
+/root/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Middlewares/Third_Party/FreeRTOS/Source/FreeRTOS_CLI.c:221:7:FreeRTOS_CLIGetOutputBuffer	4	static
+/root/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Middlewares/Third_Party/FreeRTOS/Source/FreeRTOS_CLI.c:227:13:FreeRTOS_CLIGetParameter	32	static
+/root/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Middlewares/Third_Party/FreeRTOS/Source/FreeRTOS_CLI.c:283:19:prvHelpCommand	32	static
+/root/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Middlewares/Third_Party/FreeRTOS/Source/FreeRTOS_CLI.c:316:15:prvGetNumberOfParameters	24	static
