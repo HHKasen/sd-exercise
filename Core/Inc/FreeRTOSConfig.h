@@ -45,6 +45,14 @@
 
 /* USER CODE BEGIN Includes */
 /* Section where include file can be added */
+#include "stm32f4xx_hal.h"
+#include "main.h"
+//#if ( ( configGENERATE_RUN_TIME_STATS == 1 ) && ( configUSE_STATS_FORMATTING_FUNCTIONS > 0 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
+#define configUSE_STATS_FORMATTING_FUNCTIONS 1
+
+#define configGENERATE_RUN_TIME_STATS 1
+#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() HAL_TIM_Base_Start(&htim2)
+#define portGET_RUN_TIME_COUNTER_VALUE()	(volatile unsigned long) __HAL_TIM_GET_COUNTER(&htim2)
 /* USER CODE END Includes */
 
 /* Ensure definitions are only used by the compiler, and not by the assembler. */
@@ -65,7 +73,7 @@
 #define configUSE_IDLE_HOOK                      0
 #define configUSE_TICK_HOOK                      0
 #define configCPU_CLOCK_HZ                       ( SystemCoreClock )
-#define configTICK_RATE_HZ                       ((TickType_t)1000)
+#define configTICK_RATE_HZ                       ((TickType_t)100)
 #define configMAX_PRIORITIES                     ( 56 )
 #define configMINIMAL_STACK_SIZE                 ((uint16_t)128)
 #define configTOTAL_HEAP_SIZE                    ((size_t)15360)
@@ -89,7 +97,7 @@
 
 /* Software timer definitions. */
 #define configUSE_TIMERS                         1
-#define configTIMER_TASK_PRIORITY                ( 2 )
+#define configTIMER_TASK_PRIORITY                ( 3 )
 #define configTIMER_QUEUE_LENGTH                 10
 #define configTIMER_TASK_STACK_DEPTH             256
 
@@ -152,16 +160,8 @@ See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 header file. */
 /* USER CODE BEGIN 1 */
 #define configASSERT( x ) if ((x) == 0) {taskDISABLE_INTERRUPTS(); for( ;; );}
+#define configCOMMAND_INT_MAX_OUTPUT_SIZE 256
 /* USER CODE END 1 */
-
-  /* The size of the global output buffer that is available for use when there
-  are multiple command interpreters running at once (for example, one on a UART
-  and one on TCP/IP).  This is done to prevent an output buffer being defined by
-  each implementation - which would waste RAM.  In this case, there is only one
-  command interpreter running, and it has its own local output buffer, so the
-  global buffer is just set to be one byte long as it is not used and should not
-  take up unnecessary RAM. */
-#define configCOMMAND_INT_MAX_OUTPUT_SIZE 1
 
 /* Definitions that map the FreeRTOS port interrupt handlers to their CMSIS
 standard names. */

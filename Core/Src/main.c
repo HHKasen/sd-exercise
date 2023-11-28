@@ -18,25 +18,19 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "FreeRTOSConfig.h"
-#include "FreeRTOS.h"
-#include "FreeRTOS_CLI.h"
-//#include "portable.h"
+#include "cmsis_os.h"
 #include "fatfs.h"
-#include <stdio.h>
-
-#ifdef __GNUC__
-#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
-#define GETCHAR_PROTOTYPE int __io_getchar(void)
-#else
-#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
-#define GETCHAR_PROTOTYPE int fgetc(FILE *f)
-#endif
-
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "FreeRTOSConfig.h"
+#include "FreeRTOS.h"
+#include "FreeRTOS_CLI.h"
+#include "task.h"
 
+//#include "portable.h"
+#include "fatfs.h"
+#include <stdio.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -59,12 +53,26 @@
 /* Private variables ---------------------------------------------------------*/
 SPI_HandleTypeDef hspi2;
 
+volatile TIM_HandleTypeDef htim2;
+
 UART_HandleTypeDef huart2;
 
 /* Definitions for defaultTask */
+osThreadId_t defaultTaskHandle;
+const osThreadAttr_t defaultTask_attributes = {
+  .name = "defaultTask",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
 
 /* USER CODE BEGIN PV */
-
+#ifdef __GNUC__
+#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+#define GETCHAR_PROTOTYPE int __io_getchar(void)
+#else
+#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+#define GETCHAR_PROTOTYPE int fgetc(FILE *f)
+#endif
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -72,6 +80,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_SPI2_Init(void);
+static void MX_TIM2_Init(void);
 void StartDefaultTask(void *argument);
 
 /* USER CODE BEGIN PFP */
@@ -94,8 +103,8 @@ void toggleLED_1(void *parameter) {
   }
 }
 
-#define MAX_INPUT_LENGTH    50
-#define MAX_OUTPUT_LENGTH   100
+#define MAX_INPUT_LENGTH    300
+#define MAX_OUTPUT_LENGTH   300
 
 static const int8_t * const pcWelcomeMessage =
   "FreeRTOS command server.\r\nType Help to view a list of registered commands.\r\n";
@@ -108,8 +117,44 @@ BaseType_t xCommandTest(char *pcWriteBuffer,
 
 	//assumbe buffer is big enough
 	memset(pcWriteBuffer,'\0',xWriteBufferLen);
-	//pcWriteBuffer = "I am a dummy\r\n";
-	strcpy(pcWriteBuffer,"I am a dummy\r\n");
+	//vTaskList(pcWriteBuffer);
+	//vTaskGetRunTimeStats
+	 long int xx =  __HAL_TIM_GET_COUNTER(&htim2);
+	 printf("timer:%u\r\n",xx);
+
+	 printf("timer:%u\r\n",portGET_RUN_TIME_COUNTER_VALUE());
+
+	 vTaskGetRunTimeStats(pcWriteBuffer);
+
+//	 UBaseType_t uxTaskGetSystemState(
+//	                        TaskStatus_t * const pxTaskStatusArray,
+//	                        const UBaseType_t uxArraySize,
+//	                        unsigned long * const pulTotalRunTime );
+//
+//	 TaskStatus_t *pxTaskStatusArray;
+//	 volatile UBaseType_t uxArraySize, x;
+//	 unsigned long ulTotalRunTime, ulStatsAsPercentage;
+
+	 /* Take a snapshot of the number of tasks in case it changes while this
+	 function is executing. */
+//	 uxArraySize = uxTaskGetNumberOfTasks();
+//
+//	 /* Allocate a TaskStatus_t structure for each task.  An array could be
+//	 allocated statically at compile time. */
+//	  pxTaskStatusArray = pvPortMalloc( uxArraySize * sizeof( TaskStatus_t ) );
+//
+//      /* Generate raw status information about each task. */
+//      uxArraySize = uxTaskGetSystemState( pxTaskStatusArray,
+//                                 uxArraySize,
+//                                 &ulTotalRunTime );
+//     printf("Total run time:%lu\r\n",ulTotalRunTime);
+//	//strcpy(pcWriteBuffer,"I am a dummy\r\n");
+//
+//      for( x = 0; x < uxArraySize; x++ )
+//      {
+//    	  printf("%s\r\n",pxTaskStatusArray[ x ].pcTaskName);
+//    	  printf("task time:%lu\r\n",pxTaskStatusArray[ x ].ulRunTimeCounter);
+//      }
 	return pdFALSE;
 }
 
@@ -120,6 +165,17 @@ static const CLI_Command_Definition_t xTestCmd =
 		xCommandTest,
 		0
 };
+
+
+void vDummy( void *pvParameters )
+{
+	for( ;; )
+	{
+	    vTaskDelay(10/ portTICK_PERIOD_MS);
+	    HAL_Delay(50);
+
+	}
+}
 
 void vCommandConsoleTask( void *pvParameters )
 {
@@ -136,9 +192,12 @@ void vCommandConsoleTask( void *pvParameters )
 
 //	/* Send a welcome message to the user knows they are connected. */
 //	FreeRTOS_write( xConsole, pcWelcomeMessage, strlen( pcWelcomeMessage ) );
+
 	printf(pcWelcomeMessage);
 	for( ;; )
 	{
+		vTaskDelay(1);
+
 //		/* This implementation reads a single character at a time.  Wait in the
 //        Blocked state until a character is received. */
 //		FreeRTOS_read( xConsole, &cRxedChar, sizeof( cRxedChar ) );
@@ -256,6 +315,7 @@ int main(void)
   MX_USART2_UART_Init();
   MX_SPI2_Init();
   MX_FATFS_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
   FATFS fs;           /* Filesystem object */
   FIL fil;            /* File object */
@@ -333,8 +393,6 @@ int main(void)
   //stat = USER_status(0);
   //printf("init:%u\r\n",stat);
 
-  //vTaskStartScheduler();
-
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -358,7 +416,6 @@ int main(void)
 
   /* Create the thread(s) */
   /* creation of defaultTask */
-  //defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -369,7 +426,6 @@ int main(void)
   /* USER CODE END RTOS_EVENTS */
 
   /* Start scheduler */
-  //osKernelStart();
 
   /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
@@ -383,21 +439,35 @@ int main(void)
 //              NULL);         // Task handle
   xTaskCreate(  // Use xTaskCreate() in vanilla FreeRTOS
 		  	  vCommandConsoleTask,  // Function to be called
-              "Toggle 1",   // Name of task
-              1024,         // Stack size (bytes in ESP32, words in FreeRTOS)
+              "Command Console",   // Name of task
+              128*8,         // Stack size (bytes in ESP32, words in FreeRTOS)
               NULL,         // Parameter to pass to function
-              1,            // Task priority (0 to configMAX_PRIORITIES - 1)
+              2,            // Task priority (0 to configMAX_PRIORITIES - 1)
               NULL);         // Task handle
+
+//  xTaskCreate(  // Use xTaskCreate() in vanilla FreeRTOS
+//		  	  vDummy,  // Function to be called
+//              "Dummy",   // Name of task
+//              128,         // Stack size (bytes in ESP32, words in FreeRTOS)
+//              NULL,         // Parameter to pass to function
+//              1,            // Task priority (0 to configMAX_PRIORITIES - 1)
+//              NULL);         // Task handle
 
   FreeRTOS_CLIRegisterCommand( (const) &xTestCmd);
 
+  //vTaskDelay(10/ portTICK_PERIOD_MS);
+  HAL_Delay(50);
   vTaskStartScheduler();
   printf("If we're here, theres a problem\r\n");
   char strBuf[50] = {0};
   char c = 0;
   printf("getchar\r\n");
+  int x = 0;
+  HAL_TIM_Base_Start(&htim2);
   while (1)
   {
+	 x =  __HAL_TIM_GET_COUNTER(&htim2);
+	 printf("timer:%u\r\n",x);
 
 //	scanf("%s",strBuf);
 //	printf("Heres your command:%s\r\n",strBuf);
@@ -407,7 +477,7 @@ int main(void)
 
 
 	  HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
-	HAL_Delay(100);
+	  HAL_Delay(100);
 	  HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
 	  HAL_Delay(100);
     /* USER CODE END WHILE */
@@ -497,6 +567,64 @@ static void MX_SPI2_Init(void)
   /* USER CODE BEGIN SPI2_Init 2 */
 
   /* USER CODE END SPI2_Init 2 */
+
+}
+
+/**
+  * @brief TIM2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM2_Init(void)
+{
+
+  /* USER CODE BEGIN TIM2_Init 0 */
+
+  /* USER CODE END TIM2_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+  TIM_IC_InitTypeDef sConfigIC = {0};
+
+  /* USER CODE BEGIN TIM2_Init 1 */
+
+  /* USER CODE END TIM2_Init 1 */
+  htim2.Instance = TIM2;
+  htim2.Init.Prescaler = 128;
+  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim2.Init.Period = 4294967295;
+  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_TIM_IC_Init(&htim2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
+  sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
+  sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
+  sConfigIC.ICFilter = 0;
+  if (HAL_TIM_IC_ConfigChannel(&htim2, &sConfigIC, TIM_CHANNEL_1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM2_Init 2 */
+
+  /* USER CODE END TIM2_Init 2 */
 
 }
 
