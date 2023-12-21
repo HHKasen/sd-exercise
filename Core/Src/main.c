@@ -23,11 +23,11 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "FreeRTOSConfig.h"
-#include "FreeRTOS.h"
+//#include "FreeRTOSConfig.h"
+//#include "FreeRTOS.h"
 #include "FreeRTOS_CLI.h"
 #include "task.h"
-
+#include "semphr.h"
 //#include "portable.h"
 #include "fatfs.h"
 #include <stdio.h>
@@ -56,7 +56,6 @@ SPI_HandleTypeDef hspi2;
 volatile TIM_HandleTypeDef htim2;
 
 UART_HandleTypeDef huart2;
-
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
 const osThreadAttr_t defaultTask_attributes = {
@@ -91,8 +90,10 @@ void StartDefaultTask(void *argument);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+SemaphoreHandle_t xBinarySemaphore;
 static const int rate_1 = 500;
+char _char = 0x0;
+//uint8_t filesystem_up = 0;
 
 void toggleLED_1(void *parameter) {
   while(1) {
@@ -177,6 +178,18 @@ void vDummy( void *pvParameters )
 	}
 }
 
+void vHandleUART( void *pvParameters ){
+
+	for( ;; )
+	{
+	    vTaskDelay(10/ portTICK_PERIOD_MS);
+	    HAL_Delay(50);
+
+	}
+
+}
+
+
 void vCommandConsoleTask( void *pvParameters )
 {
 ////	Peripheral_Descriptor_t xConsole;
@@ -201,7 +214,12 @@ void vCommandConsoleTask( void *pvParameters )
 //		/* This implementation reads a single character at a time.  Wait in the
 //        Blocked state until a character is received. */
 //		FreeRTOS_read( xConsole, &cRxedChar, sizeof( cRxedChar ) );
-		cRxedChar = getchar();
+
+		xSemaphoreTake( xBinarySemaphore, portMAX_DELAY );
+
+		cRxedChar = _char; //getchar();
+		HAL_UART_Transmit(&huart2, (uint8_t *)&_char, 1, HAL_MAX_DELAY);
+
 		if( cRxedChar == '\r' )
 		{
 //			printf("aah\r\n");
@@ -278,6 +296,11 @@ void vCommandConsoleTask( void *pvParameters )
 				}
 			}
 		}
+
+		//after processing char, rearm interrupt
+		HAL_UART_Receive_IT(&huart2, (uint8_t *)&_char, 1);
+
+
 	}
 }
 
@@ -288,10 +311,13 @@ prvSetupHardware();
   * @brief  The application entry point.
   * @retval int
   */
+
+
 int main(void)
 {
   /* USER CODE BEGIN 1 */
 	setvbuf(stdin, NULL, _IONBF, 0);
+	xBinarySemaphore = xSemaphoreCreateBinary();
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -457,23 +483,29 @@ int main(void)
 
   //vTaskDelay(10/ portTICK_PERIOD_MS);
   HAL_Delay(50);
+  HAL_UART_Receive_IT(&huart2, (uint8_t *)&_char, 1);
+
+
+  //printf("configMAX_SYSCALL_INTERRUPT_PRIORITY%u\r\n",configMAX_SYSCALL_INTERRUPT_PRIORITY);
   vTaskStartScheduler();
-  printf("If we're here, theres a problem\r\n");
+  printf("If we're here, sched didn't start\r\n");
   char strBuf[50] = {0};
   char c = 0;
   printf("getchar\r\n");
   int x = 0;
   HAL_TIM_Base_Start(&htim2);
+
+
   while (1)
   {
-	 x =  __HAL_TIM_GET_COUNTER(&htim2);
-	 printf("timer:%u\r\n",x);
+	 //x =  __HAL_TIM_GET_COUNTER(&htim2);
+	 //printf("timer:%u\r\n",x);
 
 //	scanf("%s",strBuf);
 //	printf("Heres your command:%s\r\n",strBuf);
 
-	  c = getchar();
-	  printf("Heres your char:%c\r\n",c);
+	  //c = getchar();
+	  //printf("Heres your char:%c\r\n",c);
 
 
 	  HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
@@ -703,6 +735,27 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+//void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+//{
+//  HAL_UART_Transmit(&huart2, (uint8_t *)&_char, 1, HAL_MAX_DELAY);
+////	BaseType_t xHigherPriorityTaskWoken;
+////
+////
+////	xHigherPriorityTaskWoken = pdFALSE;
+////
+////	//printf("about to give semaphore\r\n");
+////	xSemaphoreGiveFromISR( xBinarySemaphore, &xHigherPriorityTaskWoken );
+////
+////	printf("gave semaphore\r\n");
+////	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+//
+//  HAL_UART_Receive_IT(&huart2, (uint8_t *)&_char, 1);
+//
+//
+//
+//}
+
+
 
 PUTCHAR_PROTOTYPE
 {
