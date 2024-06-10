@@ -1,0 +1,6 @@
+../Core/Src/user_tasks.c:19:6:user_task_proto	8	static
+../Core/Src/user_tasks.c:23:12:xCommandTest	32	static
+../Core/Src/user_tasks.c:83:12:xCommandLs	24	static
+../Core/Src/user_tasks.c:121:12:xCommandPwd	32	static
+../Core/Src/user_tasks.c:153:6:create_tasks	16	static
+../Core/Src/user_tasks.c:164:6:register_commands	8	static

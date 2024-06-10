@@ -51,11 +51,14 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+DAC_HandleTypeDef hdac;
+
 SPI_HandleTypeDef hspi2;
 
 volatile TIM_HandleTypeDef htim2;
 
 UART_HandleTypeDef huart2;
+
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
 const osThreadAttr_t defaultTask_attributes = {
@@ -63,7 +66,6 @@ const osThreadAttr_t defaultTask_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
-
 /* USER CODE BEGIN PV */
 #ifdef __GNUC__
 #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
@@ -80,8 +82,10 @@ static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_SPI2_Init(void);
 static void MX_TIM2_Init(void);
+static void MX_DAC_Init(void);
 void StartDefaultTask(void *argument);
 
+static void MX_NVIC_Init(void);
 /* USER CODE BEGIN PFP */
 #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
 #define GETCHAR_PROTOTYPE int __io_getchar(void)
@@ -311,8 +315,6 @@ prvSetupHardware();
   * @brief  The application entry point.
   * @retval int
   */
-
-
 int main(void)
 {
   /* USER CODE BEGIN 1 */
@@ -342,6 +344,10 @@ int main(void)
   MX_SPI2_Init();
   MX_FATFS_Init();
   MX_TIM2_Init();
+  MX_DAC_Init();
+
+  /* Initialize interrupts */
+  MX_NVIC_Init();
   /* USER CODE BEGIN 2 */
   FATFS fs;           /* Filesystem object */
   FIL fil;            /* File object */
@@ -422,7 +428,7 @@ int main(void)
   /* USER CODE END 2 */
 
   /* Init scheduler */
-  //osKernelInitialize();
+//  osKernelInitialize();
 
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
@@ -442,6 +448,7 @@ int main(void)
 
   /* Create the thread(s) */
   /* creation of defaultTask */
+//  defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -452,6 +459,7 @@ int main(void)
   /* USER CODE END RTOS_EVENTS */
 
   /* Start scheduler */
+//  osKernelStart();
 
   /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
@@ -481,9 +489,27 @@ int main(void)
 
   FreeRTOS_CLIRegisterCommand( (const) &xTestCmd);
 
+  uint16_t dac_value=0;
+  HAL_DAC_Start(&hdac, DAC_CHANNEL_1);
+
+  while(1){
+	  for(uint16_t i =1800; i<3200; i=i+100){
+		  //dac_value = (dac_value+100)%4096;
+		  HAL_Delay(50);
+		  HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, i);
+	  }
+	  for(uint16_t i =1800; i<3200; i=i+100){
+		  //dac_value = (dac_value+100)%4096;
+		  HAL_Delay(50);
+		  HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, 5000-i);
+	  }
+  }
+
   //vTaskDelay(10/ portTICK_PERIOD_MS);
   HAL_Delay(50);
   HAL_UART_Receive_IT(&huart2, (uint8_t *)&_char, 1);
+
+
 
 
   //printf("configMAX_SYSCALL_INTERRUPT_PRIORITY%u\r\n",configMAX_SYSCALL_INTERRUPT_PRIORITY);
@@ -562,6 +588,55 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+}
+
+/**
+  * @brief NVIC Configuration.
+  * @retval None
+  */
+static void MX_NVIC_Init(void)
+{
+  /* USART2_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(USART2_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(USART2_IRQn);
+}
+
+/**
+  * @brief DAC Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_DAC_Init(void)
+{
+
+  /* USER CODE BEGIN DAC_Init 0 */
+
+  /* USER CODE END DAC_Init 0 */
+
+  DAC_ChannelConfTypeDef sConfig = {0};
+
+  /* USER CODE BEGIN DAC_Init 1 */
+
+  /* USER CODE END DAC_Init 1 */
+  /** DAC Initialization
+  */
+  hdac.Instance = DAC;
+  if (HAL_DAC_Init(&hdac) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /** DAC channel OUT1 config
+  */
+  sConfig.DAC_Trigger = DAC_TRIGGER_NONE;
+  sConfig.DAC_OutputBuffer = DAC_OUTPUTBUFFER_ENABLE;
+  if (HAL_DAC_ConfigChannel(&hdac, &sConfig, DAC_CHANNEL_1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN DAC_Init 2 */
+
+  /* USER CODE END DAC_Init 2 */
+
 }
 
 /**
@@ -732,6 +807,7 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LD2_GPIO_Port, &GPIO_InitStruct);
   /* USER CODE END MX_GPIO_Init_2 */
+
 }
 
 /* USER CODE BEGIN 4 */

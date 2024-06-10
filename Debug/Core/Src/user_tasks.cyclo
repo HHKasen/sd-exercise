@@ -1,0 +1,6 @@
+user_tasks.c:19:6:user_task_proto	1
+user_tasks.c:23:12:xCommandTest	1
+user_tasks.c:83:12:xCommandLs	2
+user_tasks.c:121:12:xCommandPwd	1
+user_tasks.c:153:6:create_tasks	1
+user_tasks.c:164:6:register_commands	1

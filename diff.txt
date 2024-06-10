@@ -1,0 +1,1210 @@
+diff --git a/Core/Inc/main.h b/Core/Inc/main.h
+index d729f09..339dc02 100755
+--- a/Core/Inc/main.h
++++ b/Core/Inc/main.h
+@@ -76,6 +76,7 @@ void vCommandConsoleTask( void *pvParameters );
+ #define TCK_GPIO_Port GPIOA
+ #define SWO_Pin GPIO_PIN_3
+ #define SWO_GPIO_Port GPIOB
++
+ /* USER CODE BEGIN Private defines */
+ #define LD2_Pin GPIO_PIN_5
+ #define LD2_GPIO_Port GPIOA
+diff --git a/Core/Inc/stm32f4xx_hal_conf.h b/Core/Inc/stm32f4xx_hal_conf.h
+index a5ca992..af1d229 100755
+--- a/Core/Inc/stm32f4xx_hal_conf.h
++++ b/Core/Inc/stm32f4xx_hal_conf.h
+@@ -37,50 +37,50 @@
+   */
+ #define HAL_MODULE_ENABLED
+ 
+-  /* #define HAL_ADC_MODULE_ENABLED   */
+-/* #define HAL_CRYP_MODULE_ENABLED   */
+-/* #define HAL_CAN_MODULE_ENABLED   */
+-/* #define HAL_CRC_MODULE_ENABLED   */
+-/* #define HAL_CAN_LEGACY_MODULE_ENABLED   */
+-/* #define HAL_CRYP_MODULE_ENABLED   */
+-/* #define HAL_DAC_MODULE_ENABLED   */
+-/* #define HAL_DCMI_MODULE_ENABLED   */
+-/* #define HAL_DMA2D_MODULE_ENABLED   */
+-/* #define HAL_ETH_MODULE_ENABLED   */
+-/* #define HAL_NAND_MODULE_ENABLED   */
+-/* #define HAL_NOR_MODULE_ENABLED   */
+-/* #define HAL_PCCARD_MODULE_ENABLED   */
+-/* #define HAL_SRAM_MODULE_ENABLED   */
+-/* #define HAL_SDRAM_MODULE_ENABLED   */
+-/* #define HAL_HASH_MODULE_ENABLED   */
+-/* #define HAL_I2C_MODULE_ENABLED   */
+-/* #define HAL_I2S_MODULE_ENABLED   */
+-/* #define HAL_IWDG_MODULE_ENABLED   */
+-/* #define HAL_LTDC_MODULE_ENABLED   */
+-/* #define HAL_RNG_MODULE_ENABLED   */
+-/* #define HAL_RTC_MODULE_ENABLED   */
+-/* #define HAL_SAI_MODULE_ENABLED   */
+-/* #define HAL_SD_MODULE_ENABLED   */
+-/* #define HAL_MMC_MODULE_ENABLED   */
++  /* #define HAL_CRYP_MODULE_ENABLED */
++/* #define HAL_ADC_MODULE_ENABLED */
++/* #define HAL_CAN_MODULE_ENABLED */
++/* #define HAL_CRC_MODULE_ENABLED */
++/* #define HAL_CAN_LEGACY_MODULE_ENABLED */
++#define HAL_DAC_MODULE_ENABLED
++/* #define HAL_DCMI_MODULE_ENABLED */
++/* #define HAL_DMA2D_MODULE_ENABLED */
++/* #define HAL_ETH_MODULE_ENABLED */
++/* #define HAL_ETH_LEGACY_MODULE_ENABLED */
++/* #define HAL_NAND_MODULE_ENABLED */
++/* #define HAL_NOR_MODULE_ENABLED */
++/* #define HAL_PCCARD_MODULE_ENABLED */
++/* #define HAL_SRAM_MODULE_ENABLED */
++/* #define HAL_SDRAM_MODULE_ENABLED */
++/* #define HAL_HASH_MODULE_ENABLED */
++/* #define HAL_I2C_MODULE_ENABLED */
++/* #define HAL_I2S_MODULE_ENABLED */
++/* #define HAL_IWDG_MODULE_ENABLED */
++/* #define HAL_LTDC_MODULE_ENABLED */
++/* #define HAL_RNG_MODULE_ENABLED */
++/* #define HAL_RTC_MODULE_ENABLED */
++/* #define HAL_SAI_MODULE_ENABLED */
++/* #define HAL_SD_MODULE_ENABLED */
++/* #define HAL_MMC_MODULE_ENABLED */
+ #define HAL_SPI_MODULE_ENABLED
+ #define HAL_TIM_MODULE_ENABLED
+ #define HAL_UART_MODULE_ENABLED
+-/* #define HAL_USART_MODULE_ENABLED   */
+-/* #define HAL_IRDA_MODULE_ENABLED   */
+-/* #define HAL_SMARTCARD_MODULE_ENABLED   */
+-/* #define HAL_SMBUS_MODULE_ENABLED   */
+-/* #define HAL_WWDG_MODULE_ENABLED   */
+-/* #define HAL_PCD_MODULE_ENABLED   */
+-/* #define HAL_HCD_MODULE_ENABLED   */
+-/* #define HAL_DSI_MODULE_ENABLED   */
+-/* #define HAL_QSPI_MODULE_ENABLED   */
+-/* #define HAL_QSPI_MODULE_ENABLED   */
+-/* #define HAL_CEC_MODULE_ENABLED   */
+-/* #define HAL_FMPI2C_MODULE_ENABLED   */
+-/* #define HAL_FMPSMBUS_MODULE_ENABLED   */
+-/* #define HAL_SPDIFRX_MODULE_ENABLED   */
+-/* #define HAL_DFSDM_MODULE_ENABLED   */
+-/* #define HAL_LPTIM_MODULE_ENABLED   */
++/* #define HAL_USART_MODULE_ENABLED */
++/* #define HAL_IRDA_MODULE_ENABLED */
++/* #define HAL_SMARTCARD_MODULE_ENABLED */
++/* #define HAL_SMBUS_MODULE_ENABLED */
++/* #define HAL_WWDG_MODULE_ENABLED */
++/* #define HAL_PCD_MODULE_ENABLED */
++/* #define HAL_HCD_MODULE_ENABLED */
++/* #define HAL_DSI_MODULE_ENABLED */
++/* #define HAL_QSPI_MODULE_ENABLED */
++/* #define HAL_QSPI_MODULE_ENABLED */
++/* #define HAL_CEC_MODULE_ENABLED */
++/* #define HAL_FMPI2C_MODULE_ENABLED */
++/* #define HAL_FMPSMBUS_MODULE_ENABLED */
++/* #define HAL_SPDIFRX_MODULE_ENABLED */
++/* #define HAL_DFSDM_MODULE_ENABLED */
++/* #define HAL_LPTIM_MODULE_ENABLED */
+ #define HAL_GPIO_MODULE_ENABLED
+ #define HAL_EXTI_MODULE_ENABLED
+ #define HAL_DMA_MODULE_ENABLED
+@@ -214,7 +214,7 @@
+ #define MAC_ADDR5   0U
+ 
+ /* Definition of the Ethernet driver buffers size and count */
+-#define ETH_RX_BUF_SIZE                ETH_MAX_PACKET_SIZE /* buffer size for receive               */
++#define ETH_RX_BUF_SIZE                 /* buffer size for receive               */
+ #define ETH_TX_BUF_SIZE                ETH_MAX_PACKET_SIZE /* buffer size for transmit              */
+ #define ETH_RXBUFNB                    4U       /* 4 Rx buffers of size ETH_RX_BUF_SIZE  */
+ #define ETH_TXBUFNB                    4U       /* 4 Tx buffers of size ETH_TX_BUF_SIZE  */
+@@ -327,6 +327,10 @@
+   #include "stm32f4xx_hal_eth.h"
+ #endif /* HAL_ETH_MODULE_ENABLED */
+ 
++#ifdef HAL_ETH_LEGACY_MODULE_ENABLED
++  #include "stm32f4xx_hal_eth_legacy.h"
++#endif /* HAL_ETH_LEGACY_MODULE_ENABLED */
++
+ #ifdef HAL_FLASH_MODULE_ENABLED
+   #include "stm32f4xx_hal_flash.h"
+ #endif /* HAL_FLASH_MODULE_ENABLED */
+diff --git a/Core/Src/main.c b/Core/Src/main.c
+index 8b35800..1fc02d3 100755
+--- a/Core/Src/main.c
++++ b/Core/Src/main.c
+@@ -51,11 +51,14 @@
+ /* USER CODE END PM */
+ 
+ /* Private variables ---------------------------------------------------------*/
++DAC_HandleTypeDef hdac;
++
+ SPI_HandleTypeDef hspi2;
+ 
+-volatile TIM_HandleTypeDef htim2;
++TIM_HandleTypeDef htim2;
+ 
+ UART_HandleTypeDef huart2;
++
+ /* Definitions for defaultTask */
+ osThreadId_t defaultTaskHandle;
+ const osThreadAttr_t defaultTask_attributes = {
+@@ -63,7 +66,6 @@ const osThreadAttr_t defaultTask_attributes = {
+   .stack_size = 128 * 4,
+   .priority = (osPriority_t) osPriorityNormal,
+ };
+-
+ /* USER CODE BEGIN PV */
+ #ifdef __GNUC__
+ #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+@@ -80,8 +82,10 @@ static void MX_GPIO_Init(void);
+ static void MX_USART2_UART_Init(void);
+ static void MX_SPI2_Init(void);
+ static void MX_TIM2_Init(void);
++static void MX_DAC_Init(void);
+ void StartDefaultTask(void *argument);
+ 
++static void MX_NVIC_Init(void);
+ /* USER CODE BEGIN PFP */
+ #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+ #define GETCHAR_PROTOTYPE int __io_getchar(void)
+@@ -256,8 +260,6 @@ prvSetupHardware();
+   * @brief  The application entry point.
+   * @retval int
+   */
+-
+-
+ int main(void)
+ {
+   /* USER CODE BEGIN 1 */
+@@ -287,6 +289,10 @@ int main(void)
+   MX_SPI2_Init();
+   MX_FATFS_Init();
+   MX_TIM2_Init();
++  MX_DAC_Init();
++
++  /* Initialize interrupts */
++  MX_NVIC_Init();
+   /* USER CODE BEGIN 2 */
+   FATFS fs;           /* Filesystem object */
+   FIL fil;            /* File object */
+@@ -412,7 +418,6 @@ int main(void)
+   /* USER CODE END RTOS_EVENTS */
+ 
+   /* Start scheduler */
+-
+   /* We should never get here as control is now taken by the scheduler */
+   /* Infinite loop */
+   /* USER CODE BEGIN WHILE */
+@@ -487,6 +492,7 @@ void SystemClock_Config(void)
+   */
+   __HAL_RCC_PWR_CLK_ENABLE();
+   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE3);
++
+   /** Initializes the RCC Oscillators according to the specified parameters
+   * in the RCC_OscInitTypeDef structure.
+   */
+@@ -504,6 +510,7 @@ void SystemClock_Config(void)
+   {
+     Error_Handler();
+   }
++
+   /** Initializes the CPU, AHB and APB buses clocks
+   */
+   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+@@ -519,6 +526,57 @@ void SystemClock_Config(void)
+   }
+ }
+ 
++/**
++  * @brief NVIC Configuration.
++  * @retval None
++  */
++static void MX_NVIC_Init(void)
++{
++  /* USART2_IRQn interrupt configuration */
++  HAL_NVIC_SetPriority(USART2_IRQn, 5, 0);
++  HAL_NVIC_EnableIRQ(USART2_IRQn);
++}
++
++/**
++  * @brief DAC Initialization Function
++  * @param None
++  * @retval None
++  */
++static void MX_DAC_Init(void)
++{
++
++  /* USER CODE BEGIN DAC_Init 0 */
++
++  /* USER CODE END DAC_Init 0 */
++
++  DAC_ChannelConfTypeDef sConfig = {0};
++
++  /* USER CODE BEGIN DAC_Init 1 */
++
++  /* USER CODE END DAC_Init 1 */
++
++  /** DAC Initialization
++  */
++  hdac.Instance = DAC;
++  if (HAL_DAC_Init(&hdac) != HAL_OK)
++  {
++    Error_Handler();
++  }
++
++  /** DAC channel OUT1 config
++  */
++  sConfig.DAC_Trigger = DAC_TRIGGER_NONE;
++  sConfig.DAC_OutputBuffer = DAC_OUTPUTBUFFER_ENABLE;
++  if (HAL_DAC_ConfigChannel(&hdac, &sConfig, DAC_CHANNEL_1) != HAL_OK)
++  {
++    Error_Handler();
++  }
++  /* USER CODE BEGIN DAC_Init 2 */
++
++  /* USER CODE END DAC_Init 2 */
++
++}
++
+ /**
+   * @brief SPI2 Initialization Function
+   * @param None
+@@ -656,6 +714,8 @@ static void MX_USART2_UART_Init(void)
+ static void MX_GPIO_Init(void)
+ {
+   GPIO_InitTypeDef GPIO_InitStruct = {0};
++/* USER CODE BEGIN MX_GPIO_Init_1 */
++/* USER CODE END MX_GPIO_Init_1 */
+ 
+   /* GPIO Ports Clock Enable */
+   __HAL_RCC_GPIOC_CLK_ENABLE();
+@@ -679,14 +739,14 @@ static void MX_GPIO_Init(void)
+   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+   HAL_GPIO_Init(SD_CS_GPIO_Port, &GPIO_InitStruct);
+ 
+-  /* USER CODE BEGIN MX_GPIO_Init_2 */
++/* USER CODE BEGIN MX_GPIO_Init_2 */
+   /*Configure GPIO pin : LD2_Pin */
+   GPIO_InitStruct.Pin = LD2_Pin;
+   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+   GPIO_InitStruct.Pull = GPIO_NOPULL;
+   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+   HAL_GPIO_Init(LD2_GPIO_Port, &GPIO_InitStruct);
+-  /* USER CODE END MX_GPIO_Init_2 */
++/* USER CODE END MX_GPIO_Init_2 */
+ }
+ 
+ /* USER CODE BEGIN 4 */
+@@ -820,4 +880,3 @@ void assert_failed(uint8_t *file, uint32_t line)
+   /* USER CODE END 6 */
+ }
+ #endif /* USE_FULL_ASSERT */
+-
+diff --git a/Core/Src/stm32f4xx_hal_msp.c b/Core/Src/stm32f4xx_hal_msp.c
+index c64a180..db7ac5c 100755
+--- a/Core/Src/stm32f4xx_hal_msp.c
++++ b/Core/Src/stm32f4xx_hal_msp.c
+@@ -78,6 +78,67 @@ void HAL_MspInit(void)
+   /* USER CODE END MspInit 1 */
+ }
+ 
++/**
++* @brief DAC MSP Initialization
++* This function configures the hardware resources used in this example
++* @param hdac: DAC handle pointer
++* @retval None
++*/
++void HAL_DAC_MspInit(DAC_HandleTypeDef* hdac)
++{
++  GPIO_InitTypeDef GPIO_InitStruct = {0};
++  if(hdac->Instance==DAC)
++  {
++  /* USER CODE BEGIN DAC_MspInit 0 */
++
++  /* USER CODE END DAC_MspInit 0 */
++    /* Peripheral clock enable */
++    __HAL_RCC_DAC_CLK_ENABLE();
++
++    __HAL_RCC_GPIOA_CLK_ENABLE();
++    /**DAC GPIO Configuration
++    PA4     ------> DAC_OUT1
++    */
++    GPIO_InitStruct.Pin = GPIO_PIN_4;
++    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
++    GPIO_InitStruct.Pull = GPIO_NOPULL;
++    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
++
++  /* USER CODE BEGIN DAC_MspInit 1 */
++
++  /* USER CODE END DAC_MspInit 1 */
++  }
++
++}
++
++/**
++* @brief DAC MSP De-Initialization
++* This function freeze the hardware resources used in this example
++* @param hdac: DAC handle pointer
++* @retval None
++*/
++void HAL_DAC_MspDeInit(DAC_HandleTypeDef* hdac)
++{
++  if(hdac->Instance==DAC)
++  {
++  /* USER CODE BEGIN DAC_MspDeInit 0 */
++
++  /* USER CODE END DAC_MspDeInit 0 */
++    /* Peripheral clock disable */
++    __HAL_RCC_DAC_CLK_DISABLE();
++
++    /**DAC GPIO Configuration
++    PA4     ------> DAC_OUT1
++    */
++    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_4);
++
++  /* USER CODE BEGIN DAC_MspDeInit 1 */
++
++  /* USER CODE END DAC_MspDeInit 1 */
++  }
++
++}
++
+ /**
+ * @brief SPI MSP Initialization
+ * This function configures the hardware resources used in this example
+@@ -214,6 +275,72 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base)
+ 
+ }
+ 
++/**
++* @brief UART MSP Initialization
++* This function configures the hardware resources used in this example
++* @param huart: UART handle pointer
++* @retval None
++*/
++void HAL_UART_MspInit(UART_HandleTypeDef* huart)
++{
++  GPIO_InitTypeDef GPIO_InitStruct = {0};
++  if(huart->Instance==USART2)
++  {
++  /* USER CODE BEGIN USART2_MspInit 0 */
++
++  /* USER CODE END USART2_MspInit 0 */
++    /* Peripheral clock enable */
++    __HAL_RCC_USART2_CLK_ENABLE();
++
++    __HAL_RCC_GPIOA_CLK_ENABLE();
++    /**USART2 GPIO Configuration
++    PA2     ------> USART2_TX
++    PA3     ------> USART2_RX
++    */
++    GPIO_InitStruct.Pin = USART_TX_Pin|USART_RX_Pin;
++    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
++    GPIO_InitStruct.Pull = GPIO_NOPULL;
++    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
++    GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
++    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
++
++  /* USER CODE BEGIN USART2_MspInit 1 */
++    //configMAX_SYSCALL_INTERRUPT_PRIORITY is 80, hardcoded as a test
++
++    HAL_NVIC_SetPriority(USART2_IRQn, 6, 0);
++  /* USER CODE END TIM2_MspInit 1 */
++  }
++
++}
++
++/**
++* @brief TIM_Base MSP De-Initialization
++* This function freeze the hardware resources used in this example
++* @param htim_base: TIM_Base handle pointer
++* @retval None
++*/
++void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base)
++{
++  if(htim_base->Instance==TIM2)
++  {
++  /* USER CODE BEGIN TIM2_MspDeInit 0 */
++
++  /* USER CODE END TIM2_MspDeInit 0 */
++    /* Peripheral clock disable */
++    __HAL_RCC_TIM2_CLK_DISABLE();
++
++    /**TIM2 GPIO Configuration
++    PA0-WKUP     ------> TIM2_CH1
++    */
++    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_0);
++
++  /* USER CODE BEGIN TIM2_MspDeInit 1 */
++
++  /* USER CODE END TIM2_MspDeInit 1 */
++  }
++
++}
++
+ /**
+ * @brief UART MSP Initialization
+ * This function configures the hardware resources used in this example
+@@ -286,4 +413,3 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
+ /* USER CODE BEGIN 1 */
+ 
+ /* USER CODE END 1 */
+-
+diff --git a/Core/Src/stm32f4xx_hal_timebase_tim.c b/Core/Src/stm32f4xx_hal_timebase_tim.c
+index 749801b..04062c7 100644
+--- a/Core/Src/stm32f4xx_hal_timebase_tim.c
++++ b/Core/Src/stm32f4xx_hal_timebase_tim.c
+@@ -41,14 +41,11 @@ TIM_HandleTypeDef        htim1;
+ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
+ {
+   RCC_ClkInitTypeDef    clkconfig;
+-  uint32_t              uwTimclock = 0;
+-  uint32_t              uwPrescalerValue = 0;
+-  uint32_t              pFLatency;
+-  /*Configure the TIM1 IRQ priority */
+-  HAL_NVIC_SetPriority(TIM1_UP_TIM10_IRQn, TickPriority ,0);
++  uint32_t              uwTimclock = 0U;
+ 
+-  /* Enable the TIM1 global Interrupt */
+-  HAL_NVIC_EnableIRQ(TIM1_UP_TIM10_IRQn);
++  uint32_t              uwPrescalerValue = 0U;
++  uint32_t              pFLatency;
++  HAL_StatusTypeDef     status;
+ 
+   /* Enable TIM1 clock */
+   __HAL_RCC_TIM1_CLK_ENABLE();
+@@ -57,7 +54,8 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
+   HAL_RCC_GetClockConfig(&clkconfig, &pFLatency);
+ 
+   /* Compute TIM1 clock */
+-  uwTimclock = HAL_RCC_GetPCLK2Freq();
++      uwTimclock = HAL_RCC_GetPCLK2Freq();
++
+   /* Compute the prescaler value to have TIM1 counter clock equal to 1MHz */
+   uwPrescalerValue = (uint32_t) ((uwTimclock / 1000000U) - 1U);
+ 
+@@ -65,6 +63,7 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
+   htim1.Instance = TIM1;
+ 
+   /* Initialize TIMx peripheral as follow:
++
+   + Period = [(TIM1CLK/1000) - 1]. to have a (1/1000) s time base.
+   + Prescaler = (uwTimclock/1000000 - 1) to have a 1MHz counter clock.
+   + ClockDivision = 0
+@@ -74,15 +73,33 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
+   htim1.Init.Prescaler = uwPrescalerValue;
+   htim1.Init.ClockDivision = 0;
+   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
++  htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+ 
+-  if(HAL_TIM_Base_Init(&htim1) == HAL_OK)
++  status = HAL_TIM_Base_Init(&htim1);
++  if (status == HAL_OK)
+   {
+     /* Start the TIM time Base generation in interrupt mode */
+-    return HAL_TIM_Base_Start_IT(&htim1);
++    status = HAL_TIM_Base_Start_IT(&htim1);
++    if (status == HAL_OK)
++    {
++    /* Enable the TIM1 global Interrupt */
++        HAL_NVIC_EnableIRQ(TIM1_UP_TIM10_IRQn);
++      /* Configure the SysTick IRQ priority */
++      if (TickPriority < (1UL << __NVIC_PRIO_BITS))
++      {
++        /* Configure the TIM IRQ priority */
++        HAL_NVIC_SetPriority(TIM1_UP_TIM10_IRQn, TickPriority, 0U);
++        uwTickPrio = TickPriority;
++      }
++      else
++      {
++        status = HAL_ERROR;
++      }
++    }
+   }
+ 
+-  /* Return function status */
+-  return HAL_ERROR;
++ /* Return function status */
++  return status;
+ }
+ 
+ /**
+diff --git a/Core/Src/stm32f4xx_it.c b/Core/Src/stm32f4xx_it.c
+index 7c206ff..21c320b 100755
+--- a/Core/Src/stm32f4xx_it.c
++++ b/Core/Src/stm32f4xx_it.c
+@@ -203,4 +203,3 @@ void USART2_IRQHandler(void)
+ /* USER CODE BEGIN 1 */
+ 
+ /* USER CODE END 1 */
+-
+diff --git a/sd-card.ioc b/sd-card.ioc
+index 5ddcce1..9ab2a07 100755
+--- a/sd-card.ioc
++++ b/sd-card.ioc
+@@ -8,43 +8,45 @@ File.Version=6
+ KeepUserPlacement=false
+ Mcu.CPN=STM32F446RET6
+ Mcu.Family=STM32F4
+-Mcu.IP0=FATFS
+-Mcu.IP1=FREERTOS
+-Mcu.IP2=NVIC
+-Mcu.IP3=RCC
+-Mcu.IP4=SPI2
+-Mcu.IP5=SYS
+-Mcu.IP6=TIM2
+-Mcu.IP7=USART2
+-Mcu.IPNb=8
++Mcu.IP0=DAC
++Mcu.IP1=FATFS
++Mcu.IP2=FREERTOS
++Mcu.IP3=NVIC
++Mcu.IP4=RCC
++Mcu.IP5=SPI2
++Mcu.IP6=SYS
++Mcu.IP7=TIM2
++Mcu.IP8=USART2
++Mcu.IPNb=9
+ Mcu.Name=STM32F446R(C-E)Tx
+ Mcu.Package=LQFP64
+ Mcu.Pin0=PC13
+ Mcu.Pin1=PC14-OSC32_IN
+-Mcu.Pin10=PB13
+-Mcu.Pin11=PB14
+-Mcu.Pin12=PB15
+-Mcu.Pin13=PA13
+-Mcu.Pin14=PA14
+-Mcu.Pin15=PB3
+-Mcu.Pin16=VP_FATFS_VS_Generic
+-Mcu.Pin17=VP_FREERTOS_VS_CMSIS_V2
+-Mcu.Pin18=VP_SYS_VS_tim1
+-Mcu.Pin19=VP_TIM2_VS_ClockSourceINT
++Mcu.Pin10=PB12
++Mcu.Pin11=PB13
++Mcu.Pin12=PB14
++Mcu.Pin13=PB15
++Mcu.Pin14=PA13
++Mcu.Pin15=PA14
++Mcu.Pin16=PB3
++Mcu.Pin17=VP_FATFS_VS_Generic
++Mcu.Pin18=VP_FREERTOS_VS_CMSIS_V2
++Mcu.Pin19=VP_SYS_VS_tim1
+ Mcu.Pin2=PC15-OSC32_OUT
++Mcu.Pin20=VP_TIM2_VS_ClockSourceINT
+ Mcu.Pin3=PH0-OSC_IN
+ Mcu.Pin4=PH1-OSC_OUT
+ Mcu.Pin5=PA0-WKUP
+ Mcu.Pin6=PA2
+ Mcu.Pin7=PA3
+-Mcu.Pin8=PB1
+-Mcu.Pin9=PB12
+-Mcu.PinsNb=20
++Mcu.Pin8=PA4
++Mcu.Pin9=PB1
++Mcu.PinsNb=21
+ Mcu.ThirdPartyNb=0
+ Mcu.UserConstants=
+ Mcu.UserName=STM32F446RETx
+-MxCube.Version=6.4.0
+-MxDb.Version=DB.6.0.40
++MxCube.Version=6.8.1
++MxDb.Version=DB.6.0.81
+ NVIC.BusFault_IRQn=true\:0\:0\:false\:false\:true\:false\:true\:false\:false
+ NVIC.DebugMonitor_IRQn=true\:0\:0\:false\:false\:true\:false\:true\:false\:false
+ NVIC.ForceEnableDMAVector=true
+@@ -84,6 +86,7 @@ PA3.GPIO_Label=USART_RX
+ PA3.Locked=true
+ PA3.Mode=Asynchronous
+ PA3.Signal=USART2_RX
++PA4.Signal=COMP_DAC1_group
+ PB1.GPIOParameters=GPIO_Label
+ PB1.GPIO_Label=SD_CS
+ PB1.Locked=true
+@@ -130,7 +133,7 @@ ProjectManager.CustomerFirmwarePackage=
+ ProjectManager.DefaultFWLocation=true
+ ProjectManager.DeletePrevious=true
+ ProjectManager.DeviceId=STM32F446RETx
+-ProjectManager.FirmwarePackage=STM32Cube FW_F4 V1.26.2
++ProjectManager.FirmwarePackage=STM32Cube FW_F4 V1.27.1
+ ProjectManager.FreePins=false
+ ProjectManager.HalAssertFull=false
+ ProjectManager.HeapSize=0x200
+@@ -199,6 +202,8 @@ RCC.VCOOutputFreq_Value=336000000
+ RCC.VCOSAIInputFreq_Value=1000000
+ RCC.VCOSAIOutputFreq_Value=192000000
+ RCC.VcooutputI2S=96000000
++SH.COMP_DAC1_group.0=DAC_OUT1,DAC_OUT1
++SH.COMP_DAC1_group.ConfNb=1
+ SH.GPXTI13.0=GPIO_EXTI13
+ SH.GPXTI13.ConfNb=1
+ SH.S_TIM2_CH1_ETR.0=TIM2_CH1,Input_Capture1_from_TI1
+diff --git a/Core/Inc/main.h b/Core/Inc/main.h
+index d729f09..339dc02 100755
+--- a/Core/Inc/main.h
++++ b/Core/Inc/main.h
+@@ -76,6 +76,7 @@ void vCommandConsoleTask( void *pvParameters );
+ #define TCK_GPIO_Port GPIOA
+ #define SWO_Pin GPIO_PIN_3
+ #define SWO_GPIO_Port GPIOB
++
+ /* USER CODE BEGIN Private defines */
+ #define LD2_Pin GPIO_PIN_5
+ #define LD2_GPIO_Port GPIOA
+diff --git a/Core/Inc/stm32f4xx_hal_conf.h b/Core/Inc/stm32f4xx_hal_conf.h
+index a5ca992..af1d229 100755
+--- a/Core/Inc/stm32f4xx_hal_conf.h
++++ b/Core/Inc/stm32f4xx_hal_conf.h
+@@ -37,50 +37,50 @@
+   */
+ #define HAL_MODULE_ENABLED
+ 
+-  /* #define HAL_ADC_MODULE_ENABLED   */
+-/* #define HAL_CRYP_MODULE_ENABLED   */
+-/* #define HAL_CAN_MODULE_ENABLED   */
+-/* #define HAL_CRC_MODULE_ENABLED   */
+-/* #define HAL_CAN_LEGACY_MODULE_ENABLED   */
+-/* #define HAL_CRYP_MODULE_ENABLED   */
+-/* #define HAL_DAC_MODULE_ENABLED   */
+-/* #define HAL_DCMI_MODULE_ENABLED   */
+-/* #define HAL_DMA2D_MODULE_ENABLED   */
+-/* #define HAL_ETH_MODULE_ENABLED   */
+-/* #define HAL_NAND_MODULE_ENABLED   */
+-/* #define HAL_NOR_MODULE_ENABLED   */
+-/* #define HAL_PCCARD_MODULE_ENABLED   */
+-/* #define HAL_SRAM_MODULE_ENABLED   */
+-/* #define HAL_SDRAM_MODULE_ENABLED   */
+-/* #define HAL_HASH_MODULE_ENABLED   */
+-/* #define HAL_I2C_MODULE_ENABLED   */
+-/* #define HAL_I2S_MODULE_ENABLED   */
+-/* #define HAL_IWDG_MODULE_ENABLED   */
+-/* #define HAL_LTDC_MODULE_ENABLED   */
+-/* #define HAL_RNG_MODULE_ENABLED   */
+-/* #define HAL_RTC_MODULE_ENABLED   */
+-/* #define HAL_SAI_MODULE_ENABLED   */
+-/* #define HAL_SD_MODULE_ENABLED   */
+-/* #define HAL_MMC_MODULE_ENABLED   */
++  /* #define HAL_CRYP_MODULE_ENABLED */
++/* #define HAL_ADC_MODULE_ENABLED */
++/* #define HAL_CAN_MODULE_ENABLED */
++/* #define HAL_CRC_MODULE_ENABLED */
++/* #define HAL_CAN_LEGACY_MODULE_ENABLED */
++#define HAL_DAC_MODULE_ENABLED
++/* #define HAL_DCMI_MODULE_ENABLED */
++/* #define HAL_DMA2D_MODULE_ENABLED */
++/* #define HAL_ETH_MODULE_ENABLED */
++/* #define HAL_ETH_LEGACY_MODULE_ENABLED */
++/* #define HAL_NAND_MODULE_ENABLED */
++/* #define HAL_NOR_MODULE_ENABLED */
++/* #define HAL_PCCARD_MODULE_ENABLED */
++/* #define HAL_SRAM_MODULE_ENABLED */
++/* #define HAL_SDRAM_MODULE_ENABLED */
++/* #define HAL_HASH_MODULE_ENABLED */
++/* #define HAL_I2C_MODULE_ENABLED */
++/* #define HAL_I2S_MODULE_ENABLED */
++/* #define HAL_IWDG_MODULE_ENABLED */
++/* #define HAL_LTDC_MODULE_ENABLED */
++/* #define HAL_RNG_MODULE_ENABLED */
++/* #define HAL_RTC_MODULE_ENABLED */
++/* #define HAL_SAI_MODULE_ENABLED */
++/* #define HAL_SD_MODULE_ENABLED */
++/* #define HAL_MMC_MODULE_ENABLED */
+ #define HAL_SPI_MODULE_ENABLED
+ #define HAL_TIM_MODULE_ENABLED
+ #define HAL_UART_MODULE_ENABLED
+-/* #define HAL_USART_MODULE_ENABLED   */
+-/* #define HAL_IRDA_MODULE_ENABLED   */
+-/* #define HAL_SMARTCARD_MODULE_ENABLED   */
+-/* #define HAL_SMBUS_MODULE_ENABLED   */
+-/* #define HAL_WWDG_MODULE_ENABLED   */
+-/* #define HAL_PCD_MODULE_ENABLED   */
+-/* #define HAL_HCD_MODULE_ENABLED   */
+-/* #define HAL_DSI_MODULE_ENABLED   */
+-/* #define HAL_QSPI_MODULE_ENABLED   */
+-/* #define HAL_QSPI_MODULE_ENABLED   */
+-/* #define HAL_CEC_MODULE_ENABLED   */
+-/* #define HAL_FMPI2C_MODULE_ENABLED   */
+-/* #define HAL_FMPSMBUS_MODULE_ENABLED   */
+-/* #define HAL_SPDIFRX_MODULE_ENABLED   */
+-/* #define HAL_DFSDM_MODULE_ENABLED   */
+-/* #define HAL_LPTIM_MODULE_ENABLED   */
++/* #define HAL_USART_MODULE_ENABLED */
++/* #define HAL_IRDA_MODULE_ENABLED */
++/* #define HAL_SMARTCARD_MODULE_ENABLED */
++/* #define HAL_SMBUS_MODULE_ENABLED */
++/* #define HAL_WWDG_MODULE_ENABLED */
++/* #define HAL_PCD_MODULE_ENABLED */
++/* #define HAL_HCD_MODULE_ENABLED */
++/* #define HAL_DSI_MODULE_ENABLED */
++/* #define HAL_QSPI_MODULE_ENABLED */
++/* #define HAL_QSPI_MODULE_ENABLED */
++/* #define HAL_CEC_MODULE_ENABLED */
++/* #define HAL_FMPI2C_MODULE_ENABLED */
++/* #define HAL_FMPSMBUS_MODULE_ENABLED */
++/* #define HAL_SPDIFRX_MODULE_ENABLED */
++/* #define HAL_DFSDM_MODULE_ENABLED */
++/* #define HAL_LPTIM_MODULE_ENABLED */
+ #define HAL_GPIO_MODULE_ENABLED
+ #define HAL_EXTI_MODULE_ENABLED
+ #define HAL_DMA_MODULE_ENABLED
+@@ -214,7 +214,7 @@
+ #define MAC_ADDR5   0U
+ 
+ /* Definition of the Ethernet driver buffers size and count */
+-#define ETH_RX_BUF_SIZE                ETH_MAX_PACKET_SIZE /* buffer size for receive               */
++#define ETH_RX_BUF_SIZE                 /* buffer size for receive               */
+ #define ETH_TX_BUF_SIZE                ETH_MAX_PACKET_SIZE /* buffer size for transmit              */
+ #define ETH_RXBUFNB                    4U       /* 4 Rx buffers of size ETH_RX_BUF_SIZE  */
+ #define ETH_TXBUFNB                    4U       /* 4 Tx buffers of size ETH_TX_BUF_SIZE  */
+@@ -327,6 +327,10 @@
+   #include "stm32f4xx_hal_eth.h"
+ #endif /* HAL_ETH_MODULE_ENABLED */
+ 
++#ifdef HAL_ETH_LEGACY_MODULE_ENABLED
++  #include "stm32f4xx_hal_eth_legacy.h"
++#endif /* HAL_ETH_LEGACY_MODULE_ENABLED */
++
+ #ifdef HAL_FLASH_MODULE_ENABLED
+   #include "stm32f4xx_hal_flash.h"
+ #endif /* HAL_FLASH_MODULE_ENABLED */
+diff --git a/Core/Src/main.c b/Core/Src/main.c
+index 8b35800..43490c8 100755
+--- a/Core/Src/main.c
++++ b/Core/Src/main.c
+@@ -51,11 +51,14 @@
+ /* USER CODE END PM */
+ 
+ /* Private variables ---------------------------------------------------------*/
++DAC_HandleTypeDef hdac;
++
+ SPI_HandleTypeDef hspi2;
+ 
+ volatile TIM_HandleTypeDef htim2;
+ 
+ UART_HandleTypeDef huart2;
++
+ /* Definitions for defaultTask */
+ osThreadId_t defaultTaskHandle;
+ const osThreadAttr_t defaultTask_attributes = {
+@@ -63,7 +66,6 @@ const osThreadAttr_t defaultTask_attributes = {
+   .stack_size = 128 * 4,
+   .priority = (osPriority_t) osPriorityNormal,
+ };
+-
+ /* USER CODE BEGIN PV */
+ #ifdef __GNUC__
+ #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+@@ -80,8 +82,10 @@ static void MX_GPIO_Init(void);
+ static void MX_USART2_UART_Init(void);
+ static void MX_SPI2_Init(void);
+ static void MX_TIM2_Init(void);
++static void MX_DAC_Init(void);
+ void StartDefaultTask(void *argument);
+ 
++static void MX_NVIC_Init(void);
+ /* USER CODE BEGIN PFP */
+ #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+ #define GETCHAR_PROTOTYPE int __io_getchar(void)
+@@ -256,8 +260,6 @@ prvSetupHardware();
+   * @brief  The application entry point.
+   * @retval int
+   */
+-
+-
+ int main(void)
+ {
+   /* USER CODE BEGIN 1 */
+@@ -287,6 +289,10 @@ int main(void)
+   MX_SPI2_Init();
+   MX_FATFS_Init();
+   MX_TIM2_Init();
++  MX_DAC_Init();
++
++  /* Initialize interrupts */
++  MX_NVIC_Init();
+   /* USER CODE BEGIN 2 */
+   FATFS fs;           /* Filesystem object */
+   FIL fil;            /* File object */
+@@ -412,7 +418,6 @@ int main(void)
+   /* USER CODE END RTOS_EVENTS */
+ 
+   /* Start scheduler */
+-
+   /* We should never get here as control is now taken by the scheduler */
+   /* Infinite loop */
+   /* USER CODE BEGIN WHILE */
+@@ -487,6 +492,7 @@ void SystemClock_Config(void)
+   */
+   __HAL_RCC_PWR_CLK_ENABLE();
+   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE3);
++
+   /** Initializes the RCC Oscillators according to the specified parameters
+   * in the RCC_OscInitTypeDef structure.
+   */
+@@ -504,6 +510,7 @@ void SystemClock_Config(void)
+   {
+     Error_Handler();
+   }
++
+   /** Initializes the CPU, AHB and APB buses clocks
+   */
+   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+@@ -519,6 +526,57 @@ void SystemClock_Config(void)
+   }
+ }
+ 
++/**
++  * @brief NVIC Configuration.
++  * @retval None
++  */
++static void MX_NVIC_Init(void)
++{
++  /* USART2_IRQn interrupt configuration */
++  HAL_NVIC_SetPriority(USART2_IRQn, 5, 0);
++  HAL_NVIC_EnableIRQ(USART2_IRQn);
++}
++
++/**
++  * @brief DAC Initialization Function
++  * @param None
++  * @retval None
++  */
++static void MX_DAC_Init(void)
++{
++
++  /* USER CODE BEGIN DAC_Init 0 */
++
++  /* USER CODE END DAC_Init 0 */
++
++  DAC_ChannelConfTypeDef sConfig = {0};
++
++  /* USER CODE BEGIN DAC_Init 1 */
++
++  /* USER CODE END DAC_Init 1 */
++
++  /** DAC Initialization
++  */
++  hdac.Instance = DAC;
++  if (HAL_DAC_Init(&hdac) != HAL_OK)
++  {
++    Error_Handler();
++  }
++
++  /** DAC channel OUT1 config
++  */
++  sConfig.DAC_Trigger = DAC_TRIGGER_NONE;
++  sConfig.DAC_OutputBuffer = DAC_OUTPUTBUFFER_ENABLE;
++  if (HAL_DAC_ConfigChannel(&hdac, &sConfig, DAC_CHANNEL_1) != HAL_OK)
++  {
++    Error_Handler();
++  }
++  /* USER CODE BEGIN DAC_Init 2 */
++
++  /* USER CODE END DAC_Init 2 */
++
++}
++
+ /**
+   * @brief SPI2 Initialization Function
+   * @param None
+@@ -656,6 +714,8 @@ static void MX_USART2_UART_Init(void)
+ static void MX_GPIO_Init(void)
+ {
+   GPIO_InitTypeDef GPIO_InitStruct = {0};
++/* USER CODE BEGIN MX_GPIO_Init_1 */
++/* USER CODE END MX_GPIO_Init_1 */
+ 
+   /* GPIO Ports Clock Enable */
+   __HAL_RCC_GPIOC_CLK_ENABLE();
+@@ -679,14 +739,14 @@ static void MX_GPIO_Init(void)
+   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+   HAL_GPIO_Init(SD_CS_GPIO_Port, &GPIO_InitStruct);
+ 
+-  /* USER CODE BEGIN MX_GPIO_Init_2 */
++/* USER CODE BEGIN MX_GPIO_Init_2 */
+   /*Configure GPIO pin : LD2_Pin */
+   GPIO_InitStruct.Pin = LD2_Pin;
+   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+   GPIO_InitStruct.Pull = GPIO_NOPULL;
+   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+   HAL_GPIO_Init(LD2_GPIO_Port, &GPIO_InitStruct);
+-  /* USER CODE END MX_GPIO_Init_2 */
++/* USER CODE END MX_GPIO_Init_2 */
+ }
+ 
+ /* USER CODE BEGIN 4 */
+@@ -820,4 +880,3 @@ void assert_failed(uint8_t *file, uint32_t line)
+   /* USER CODE END 6 */
+ }
+ #endif /* USE_FULL_ASSERT */
+-
+diff --git a/Core/Src/stm32f4xx_hal_msp.c b/Core/Src/stm32f4xx_hal_msp.c
+index c64a180..4914648 100755
+--- a/Core/Src/stm32f4xx_hal_msp.c
++++ b/Core/Src/stm32f4xx_hal_msp.c
+@@ -78,6 +78,67 @@ void HAL_MspInit(void)
+   /* USER CODE END MspInit 1 */
+ }
+ 
++/**
++* @brief DAC MSP Initialization
++* This function configures the hardware resources used in this example
++* @param hdac: DAC handle pointer
++* @retval None
++*/
++void HAL_DAC_MspInit(DAC_HandleTypeDef* hdac)
++{
++  GPIO_InitTypeDef GPIO_InitStruct = {0};
++  if(hdac->Instance==DAC)
++  {
++  /* USER CODE BEGIN DAC_MspInit 0 */
++
++  /* USER CODE END DAC_MspInit 0 */
++    /* Peripheral clock enable */
++    __HAL_RCC_DAC_CLK_ENABLE();
++
++    __HAL_RCC_GPIOA_CLK_ENABLE();
++    /**DAC GPIO Configuration
++    PA4     ------> DAC_OUT1
++    */
++    GPIO_InitStruct.Pin = GPIO_PIN_4;
++    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
++    GPIO_InitStruct.Pull = GPIO_NOPULL;
++    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
++
++  /* USER CODE BEGIN DAC_MspInit 1 */
++
++  /* USER CODE END DAC_MspInit 1 */
++  }
++
++}
++
++/**
++* @brief DAC MSP De-Initialization
++* This function freeze the hardware resources used in this example
++* @param hdac: DAC handle pointer
++* @retval None
++*/
++void HAL_DAC_MspDeInit(DAC_HandleTypeDef* hdac)
++{
++  if(hdac->Instance==DAC)
++  {
++  /* USER CODE BEGIN DAC_MspDeInit 0 */
++
++  /* USER CODE END DAC_MspDeInit 0 */
++    /* Peripheral clock disable */
++    __HAL_RCC_DAC_CLK_DISABLE();
++
++    /**DAC GPIO Configuration
++    PA4     ------> DAC_OUT1
++    */
++    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_4);
++
++  /* USER CODE BEGIN DAC_MspDeInit 1 */
++
++  /* USER CODE END DAC_MspDeInit 1 */
++  }
++
++}
++
+ /**
+ * @brief SPI MSP Initialization
+ * This function configures the hardware resources used in this example
+@@ -214,6 +275,7 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base)
+ 
+ }
+ 
++
+ /**
+ * @brief UART MSP Initialization
+ * This function configures the hardware resources used in this example
+@@ -286,4 +348,3 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
+ /* USER CODE BEGIN 1 */
+ 
+ /* USER CODE END 1 */
+-
+diff --git a/Core/Src/stm32f4xx_hal_timebase_tim.c b/Core/Src/stm32f4xx_hal_timebase_tim.c
+index 749801b..04062c7 100644
+--- a/Core/Src/stm32f4xx_hal_timebase_tim.c
++++ b/Core/Src/stm32f4xx_hal_timebase_tim.c
+@@ -41,14 +41,11 @@ TIM_HandleTypeDef        htim1;
+ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
+ {
+   RCC_ClkInitTypeDef    clkconfig;
+-  uint32_t              uwTimclock = 0;
+-  uint32_t              uwPrescalerValue = 0;
+-  uint32_t              pFLatency;
+-  /*Configure the TIM1 IRQ priority */
+-  HAL_NVIC_SetPriority(TIM1_UP_TIM10_IRQn, TickPriority ,0);
++  uint32_t              uwTimclock = 0U;
+ 
+-  /* Enable the TIM1 global Interrupt */
+-  HAL_NVIC_EnableIRQ(TIM1_UP_TIM10_IRQn);
++  uint32_t              uwPrescalerValue = 0U;
++  uint32_t              pFLatency;
++  HAL_StatusTypeDef     status;
+ 
+   /* Enable TIM1 clock */
+   __HAL_RCC_TIM1_CLK_ENABLE();
+@@ -57,7 +54,8 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
+   HAL_RCC_GetClockConfig(&clkconfig, &pFLatency);
+ 
+   /* Compute TIM1 clock */
+-  uwTimclock = HAL_RCC_GetPCLK2Freq();
++      uwTimclock = HAL_RCC_GetPCLK2Freq();
++
+   /* Compute the prescaler value to have TIM1 counter clock equal to 1MHz */
+   uwPrescalerValue = (uint32_t) ((uwTimclock / 1000000U) - 1U);
+ 
+@@ -65,6 +63,7 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
+   htim1.Instance = TIM1;
+ 
+   /* Initialize TIMx peripheral as follow:
++
+   + Period = [(TIM1CLK/1000) - 1]. to have a (1/1000) s time base.
+   + Prescaler = (uwTimclock/1000000 - 1) to have a 1MHz counter clock.
+   + ClockDivision = 0
+@@ -74,15 +73,33 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
+   htim1.Init.Prescaler = uwPrescalerValue;
+   htim1.Init.ClockDivision = 0;
+   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
++  htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+ 
+-  if(HAL_TIM_Base_Init(&htim1) == HAL_OK)
++  status = HAL_TIM_Base_Init(&htim1);
++  if (status == HAL_OK)
+   {
+     /* Start the TIM time Base generation in interrupt mode */
+-    return HAL_TIM_Base_Start_IT(&htim1);
++    status = HAL_TIM_Base_Start_IT(&htim1);
++    if (status == HAL_OK)
++    {
++    /* Enable the TIM1 global Interrupt */
++        HAL_NVIC_EnableIRQ(TIM1_UP_TIM10_IRQn);
++      /* Configure the SysTick IRQ priority */
++      if (TickPriority < (1UL << __NVIC_PRIO_BITS))
++      {
++        /* Configure the TIM IRQ priority */
++        HAL_NVIC_SetPriority(TIM1_UP_TIM10_IRQn, TickPriority, 0U);
++        uwTickPrio = TickPriority;
++      }
++      else
++      {
++        status = HAL_ERROR;
++      }
++    }
+   }
+ 
+-  /* Return function status */
+-  return HAL_ERROR;
++ /* Return function status */
++  return status;
+ }
+ 
+ /**
+diff --git a/Core/Src/stm32f4xx_it.c b/Core/Src/stm32f4xx_it.c
+index 7c206ff..21c320b 100755
+--- a/Core/Src/stm32f4xx_it.c
++++ b/Core/Src/stm32f4xx_it.c
+@@ -203,4 +203,3 @@ void USART2_IRQHandler(void)
+ /* USER CODE BEGIN 1 */
+ 
+ /* USER CODE END 1 */
+-
+diff --git a/sd-card.ioc b/sd-card.ioc
+index 5ddcce1..9ab2a07 100755
+--- a/sd-card.ioc
++++ b/sd-card.ioc
+@@ -8,43 +8,45 @@ File.Version=6
+ KeepUserPlacement=false
+ Mcu.CPN=STM32F446RET6
+ Mcu.Family=STM32F4
+-Mcu.IP0=FATFS
+-Mcu.IP1=FREERTOS
+-Mcu.IP2=NVIC
+-Mcu.IP3=RCC
+-Mcu.IP4=SPI2
+-Mcu.IP5=SYS
+-Mcu.IP6=TIM2
+-Mcu.IP7=USART2
+-Mcu.IPNb=8
++Mcu.IP0=DAC
++Mcu.IP1=FATFS
++Mcu.IP2=FREERTOS
++Mcu.IP3=NVIC
++Mcu.IP4=RCC
++Mcu.IP5=SPI2
++Mcu.IP6=SYS
++Mcu.IP7=TIM2
++Mcu.IP8=USART2
++Mcu.IPNb=9
+ Mcu.Name=STM32F446R(C-E)Tx
+ Mcu.Package=LQFP64
+ Mcu.Pin0=PC13
+ Mcu.Pin1=PC14-OSC32_IN
+-Mcu.Pin10=PB13
+-Mcu.Pin11=PB14
+-Mcu.Pin12=PB15
+-Mcu.Pin13=PA13
+-Mcu.Pin14=PA14
+-Mcu.Pin15=PB3
+-Mcu.Pin16=VP_FATFS_VS_Generic
+-Mcu.Pin17=VP_FREERTOS_VS_CMSIS_V2
+-Mcu.Pin18=VP_SYS_VS_tim1
+-Mcu.Pin19=VP_TIM2_VS_ClockSourceINT
++Mcu.Pin10=PB12
++Mcu.Pin11=PB13
++Mcu.Pin12=PB14
++Mcu.Pin13=PB15
++Mcu.Pin14=PA13
++Mcu.Pin15=PA14
++Mcu.Pin16=PB3
++Mcu.Pin17=VP_FATFS_VS_Generic
++Mcu.Pin18=VP_FREERTOS_VS_CMSIS_V2
++Mcu.Pin19=VP_SYS_VS_tim1
+ Mcu.Pin2=PC15-OSC32_OUT
++Mcu.Pin20=VP_TIM2_VS_ClockSourceINT
+ Mcu.Pin3=PH0-OSC_IN
+ Mcu.Pin4=PH1-OSC_OUT
+ Mcu.Pin5=PA0-WKUP
+ Mcu.Pin6=PA2
+ Mcu.Pin7=PA3
+-Mcu.Pin8=PB1
+-Mcu.Pin9=PB12
+-Mcu.PinsNb=20
++Mcu.Pin8=PA4
++Mcu.Pin9=PB1
++Mcu.PinsNb=21
+ Mcu.ThirdPartyNb=0
+ Mcu.UserConstants=
+ Mcu.UserName=STM32F446RETx
+-MxCube.Version=6.4.0
+-MxDb.Version=DB.6.0.40
++MxCube.Version=6.8.1
++MxDb.Version=DB.6.0.81
+ NVIC.BusFault_IRQn=true\:0\:0\:false\:false\:true\:false\:true\:false\:false
+ NVIC.DebugMonitor_IRQn=true\:0\:0\:false\:false\:true\:false\:true\:false\:false
+ NVIC.ForceEnableDMAVector=true
+@@ -84,6 +86,7 @@ PA3.GPIO_Label=USART_RX
+ PA3.Locked=true
+ PA3.Mode=Asynchronous
+ PA3.Signal=USART2_RX
++PA4.Signal=COMP_DAC1_group
+ PB1.GPIOParameters=GPIO_Label
+ PB1.GPIO_Label=SD_CS
+ PB1.Locked=true
+@@ -130,7 +133,7 @@ ProjectManager.CustomerFirmwarePackage=
+ ProjectManager.DefaultFWLocation=true
+ ProjectManager.DeletePrevious=true
+ ProjectManager.DeviceId=STM32F446RETx
+-ProjectManager.FirmwarePackage=STM32Cube FW_F4 V1.26.2
++ProjectManager.FirmwarePackage=STM32Cube FW_F4 V1.27.1
+ ProjectManager.FreePins=false
+ ProjectManager.HalAssertFull=false
+ ProjectManager.HeapSize=0x200
+@@ -199,6 +202,8 @@ RCC.VCOOutputFreq_Value=336000000
+ RCC.VCOSAIInputFreq_Value=1000000
+ RCC.VCOSAIOutputFreq_Value=192000000
+ RCC.VcooutputI2S=96000000
++SH.COMP_DAC1_group.0=DAC_OUT1,DAC_OUT1
++SH.COMP_DAC1_group.ConfNb=1
+ SH.GPXTI13.0=GPIO_EXTI13
+ SH.GPXTI13.ConfNb=1
+ SH.S_TIM2_CH1_ETR.0=TIM2_CH1,Input_Capture1_from_TI1
